@@ -1,0 +1,20 @@
+import React, { useState } from 'react';
+import PerimeterPath from './PerimeterPathComponent';
+import AreaChart from './AreaChartComponent';
+
+const SyncedChartViewer = ({ data }) => {
+  const [hoveredFrameIndex, setHoveredFrameIndex] = useState(0); // Default to the first frame
+
+  const handleFrameHover = (index) => {
+    setHoveredFrameIndex(index); // Update the hovered frame index based on pointer position
+  };
+
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}> {/* Flex container */}
+      <PerimeterPath data={data} frameIndex={hoveredFrameIndex} />
+      <AreaChart data={data} onFrameHover={handleFrameHover} />
+    </div>
+  );
+};
+
+export default SyncedChartViewer;
