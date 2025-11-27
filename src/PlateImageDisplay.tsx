@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 
-interface Flask {
-  flask: string;
+interface Plate {
+  plate: string;
   last_update: string;
   culture: string;
   most_recent_snippet_path: string;
   substrate: string;
   gif_path: string;
-  // Add other flask properties as needed
 }
 
-interface FlaskImageDisplayProps {
-  flask: Flask;
+interface PlateImageDisplayProps {
+  plate: Plate;
 }
 
 const calculateTimeAgo = (differenceInMinutes: number): [string, number] => {
@@ -32,47 +31,62 @@ const renderTimeAgo = (unit: string, value: number) => (
   </span>
 );
 
-const FlaskImageDisplay: React.FC<FlaskImageDisplayProps> = ({ flask }) => {
+const PlateImageDisplay: React.FC<PlateImageDisplayProps> = ({ plate }) => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [minutesAgo, setMinutesAgo] = useState<number | null>(null);
+  const [loading, setLoading] = useState<boolean>(true); // spinner state
 
   useEffect(() => {
     const storage = getStorage();
-    const imageRef = ref(storage, flask.most_recent_snippet_path);
+    const imageRef = ref(storage, plate.most_recent_snippet_path);
 
+    getDownloadURL(imageRef)
+      .then((url) => {
+        setImageUrl(url);
+        setLoading(false); // stop spinner
+      })
+      .catch((error) => {
+        console.error('Error getting download URL:', error);
+        setLoading(false); // stop spinner even on failure
+      });
+  }, [plate.most_recent_snippet_path]);
+
+  useEffect(() => {
     const updateMinutesAgo = () => {
-      const lastUpdateDate = new Date(flask.last_update);
+      const lastUpdateDate = new Date(plate.last_update);
       const currentDate = new Date();
       const differenceInMinutes = Math.floor((currentDate.getTime() - lastUpdateDate.getTime()) / (1000 * 60));
       setMinutesAgo(differenceInMinutes);
     };
 
-    // Initial update
     updateMinutesAgo();
-
-    // Set up interval to update minutes every minute
     const intervalId = setInterval(updateMinutesAgo, 60000);
-
-    // Cleanup interval on component unmount
     return () => clearInterval(intervalId);
-  }, [flask.most_recent_snippet_path, flask.last_update]);
-
-  useEffect(() => {
-    const storage = getStorage();
-    const imageRef = ref(storage, flask.most_recent_snippet_path);
-
-    getDownloadURL(imageRef)
-      .then((url) => setImageUrl(url))
-      .catch((error) => console.error('Error getting download URL:', error));
-  }, [flask.most_recent_snippet_path]);
+  }, [plate.last_update]);
 
   return (
     <div style={{ position: 'relative', padding: '0', margin: '0', display: 'flex' }}>
-      {imageUrl && (
+      {loading && (
+        <div style={{
+          height: '200px',
+          width: '200px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          border: '1px solid #ccc',
+          borderRadius: '3px',
+          fontSize: '16px',
+          backgroundColor: '#f3f3f3',
+        }}>
+          ⏳ Loading...
+        </div>
+      )}
+
+      {!loading && imageUrl && (
         <div style={{ position: 'relative', display: 'flex' }}>
           <img
             src={imageUrl}
-            alt={`Image for ${flask.flask}`}
+            alt={`Image for ${plate.plate}`}
             style={{
               height: '200px',
               margin: '0',
@@ -101,4 +115,4 @@ const FlaskImageDisplay: React.FC<FlaskImageDisplayProps> = ({ flask }) => {
   );
 };
 
-export default FlaskImageDisplay;
+export default PlateImageDisplay;

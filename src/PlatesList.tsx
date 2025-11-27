@@ -1,8 +1,8 @@
 import React from 'react';
-import FlaskImageDisplay from './FlaskImageDisplay';
-import FlaskInfo from './FlaskInfo';
-import FlaskGifDisplay from './FlaskGifDisplay';
-import IntensityChart from './FlaskChartComponent';
+import PlateImageDisplay from './PlateImageDisplay';
+import PlateInfo from './PlateInfo';
+import PlateGifDisplay from './PlateGifDisplay';
+import IntensityChart from './PlateChartComponent';
 import SyncedChartViewer from './SyncedChartViewerComponent';
 
 function formatISODate(isoDate: string): string {
@@ -21,7 +21,7 @@ function formatISODate(isoDate: string): string {
 interface Snippet {
   chamber: string;
   creation_date: string;
-  flask: string;
+  plate: string;
   mean_blue_intensity: number;
   mean_green_intensity: number;
   mean_red_intensity: number;
@@ -30,10 +30,10 @@ interface Snippet {
   object_perimeter: string;
 }
 
-interface FlasksListProps {
+interface PlatesListProps {
   snippets: Snippet[];
-  flask: {
-    flask: string;
+  plate: {
+    plate: string;
     last_update: string;
     culture: string;
     most_recent_snippet_path: string;
@@ -43,7 +43,7 @@ interface FlasksListProps {
   creation_date: string;
 }
 
-const FlasksList: React.FC<FlasksListProps> = ({ snippets, flask, creation_date }) => {
+const PlatesList: React.FC<PlatesListProps> = ({ snippets, plate, creation_date }) => {
   // Transform the data
   const transformedData = snippets.map(({ creation_date, mean_blue_intensity, mean_green_intensity, mean_red_intensity, object_area, object_perimeter }) => ({
     timestamp_str: creation_date,
@@ -58,20 +58,15 @@ const FlasksList: React.FC<FlasksListProps> = ({ snippets, flask, creation_date 
   const getEquallySpacedData = (data: typeof transformedData, targetCount = 50) => {
     const dataLength = data.length;
     if (dataLength <= targetCount) {
-      // If the dataset contains fewer than or equal to 50 elements, return the entire dataset
       return data;
     }
 
-    // Calculate the step to select 50 equally spaced elements
     const step = Math.floor(dataLength / targetCount);
-
-    // Filter the data by taking every nth element based on the step
     return data.filter((_, index) => index % step === 0).slice(0, targetCount);
   };
 
   const transformedData50 = getEquallySpacedData(transformedData);
 
-  // Styling for the container
   const containerStyle: React.CSSProperties = {
     display: 'flex',
     flexDirection: 'row',
@@ -88,17 +83,17 @@ const FlasksList: React.FC<FlasksListProps> = ({ snippets, flask, creation_date 
     <div>
       <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', margin: '0 10px' }}>
         <div style={{ margin: '0 10px 0 0' }}>
-          <strong>Identifier: </strong>{flask.flask}
+          <strong>Identifier: </strong>{plate.plate}
         </div>
         <div>
-          <strong>Last Update: </strong>{formatISODate(flask.last_update)}
+          <strong>Last Update: </strong>{formatISODate(plate.last_update)}
         </div>
       </div>
 
       <div style={containerStyle}>
-        <FlaskImageDisplay flask={flask} />
-        <FlaskInfo flask={flask} creation_date={creation_date} />
-        <FlaskGifDisplay flask={flask} />
+        <PlateImageDisplay plate={plate} />
+        <PlateInfo plate={plate} creation_date={creation_date} />
+        <PlateGifDisplay plate={plate} />
         <SyncedChartViewer data={transformedData50} />
         <IntensityChart data={transformedData50} />
       </div>
@@ -106,4 +101,4 @@ const FlasksList: React.FC<FlasksListProps> = ({ snippets, flask, creation_date 
   );
 };
 
-export default FlasksList;
+export default PlatesList;
