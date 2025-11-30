@@ -24,12 +24,12 @@ const FirestoreDataComponent = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "bio-chart"));
+        const querySnapshot = await getDocs(collection(db, "sporescope"));
         const data = await Promise.all(
           querySnapshot.docs.map(async (docRef) => {
             const { creation_date, chamber } = docRef.data();
 
-            const platesCollectionRef = collection(doc(db, "bio-chart", docRef.id), "plates");
+            const platesCollectionRef = collection(doc(db, "sporescope", docRef.id), "plates");
             const platesQuerySnapshot = await getDocs(platesCollectionRef);
             const platesData = await Promise.all(
               platesQuerySnapshot.docs.map(async (plateDoc) => {
@@ -68,7 +68,7 @@ const FirestoreDataComponent = () => {
         chamberData.map((chamber) => (
           <div
             key={chamber.creation_date}
-            style={{ padding: "0", margin: "10px", border: "1px solid #ccc", borderRadius: "8px" }}>
+            style={{ padding: "0", margin: "10px", border: "1px solid #ccc", borderRadius: "3px" }}>
             <div style={{ padding: "5px 0 0 10px" }}>
               <strong>Chamber identifier:</strong> {chamber.chamber}
             </div>

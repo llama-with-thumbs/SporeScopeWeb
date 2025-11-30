@@ -18,6 +18,12 @@ const PlateGifDisplay: React.FC<PlateGifDisplayProps> = ({ plate }) => {
     const [gifUrl, setGifUrl] = useState<string | null>(null);
 
     useEffect(() => {
+        // Skip if path is missing or empty
+        if (!plate.gif_path) {
+            setGifUrl(null);
+            return;
+        }
+
         const storage = getStorage();
         const gifRef = ref(storage, plate.gif_path);
 
@@ -27,13 +33,14 @@ const PlateGifDisplay: React.FC<PlateGifDisplayProps> = ({ plate }) => {
     }, [plate.gif_path]);
 
     return (
-        <div style={{ padding: '10px', display: 'flex' }}>
+        <div style={{ padding: '0', margin: '0', display: 'flex' }}>
             {gifUrl ? (
                 <img
                     src={gifUrl}
                     alt={`GIF for ${plate.plate}`}
                     style={{
                         height: '200px',
+                        width: '200px',
                         margin: '0',
                         padding: '0',
                         border: '1px solid #ccc',
@@ -44,7 +51,7 @@ const PlateGifDisplay: React.FC<PlateGifDisplayProps> = ({ plate }) => {
                 <div
                     style={{
                         height: '200px',
-                        width: '150px',
+                        width: '200px',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',

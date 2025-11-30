@@ -41,7 +41,7 @@ const CustomTooltip = ({ active, payload, label }) => {
     return (
       <div style={{
         border: "1px solid #ccc",
-        borderRadius: '2px',
+        borderRadius: '3px',
         margin: "0, 5px",
         padding: "0, 5px",
         lineHeight: "0.2"
@@ -68,12 +68,12 @@ const IntensityChart = ({ data }) => {
       className="chart-box"
       style={{
         border: "1px solid #ccc",
-        borderRadius: '8px',
-        margin: "0",
+        borderRadius: '3px',
+        margin: "10px",
         padding: "0 10px"
       }}
     >
-      <LineChart width={350} height={200} data={smoothedData}>
+      <LineChart width={400} height={200} data={smoothedData}>
         <XAxis
           dataKey="timestamp_str"
           tick={true}

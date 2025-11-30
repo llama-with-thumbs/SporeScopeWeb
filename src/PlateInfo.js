@@ -28,8 +28,9 @@ const PlateInfo = ({ plate, creation_date }) => {
     <div
       style={{
         border: '1px solid #ccc',
-        height: '200px',
-        borderRadius: '8px',
+        height: '400px',
+        width: '200px',
+        borderRadius: '3px',
         margin: '0 0 0 10px',
         padding: '0px',
         display: 'flex',
@@ -49,9 +50,8 @@ const PlateInfo = ({ plate, creation_date }) => {
           Parameters
         </h3>
         <div>
-          <strong>Seeded culture:</strong>{' '}
+          <strong>Seeded culture:</strong> {culture}
           <a href={culture} target="_blank" rel="noopener noreferrer">
-            P. cubensis
           </a>
         </div>
         <div>

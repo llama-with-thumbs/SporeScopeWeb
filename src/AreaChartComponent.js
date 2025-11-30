@@ -84,7 +84,7 @@ const AreaChart = ({ data, onFrameHover }) => {
       className="chart-box"
       style={{
         border: "1px solid #ccc",
-        borderRadius: "8px",
+        borderRadius: "3px",
         margin: "10px",
         padding: "0 10px",
       }}>

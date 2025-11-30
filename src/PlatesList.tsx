@@ -73,7 +73,7 @@ const PlatesList: React.FC<PlatesListProps> = ({ snippets, plate, creation_date 
     alignItems: 'center',
     justifyContent: 'flex-start',
     border: '1px solid #ccc',
-    borderRadius: '8px',
+    borderRadius: '3px',
     lineHeight: 'normal',
     margin: '5px 10px',
     padding: '0px 10px',
@@ -93,9 +93,13 @@ const PlatesList: React.FC<PlatesListProps> = ({ snippets, plate, creation_date 
       <div style={containerStyle}>
         <PlateImageDisplay plate={plate} />
         <PlateInfo plate={plate} creation_date={creation_date} />
-        <PlateGifDisplay plate={plate} />
-        <SyncedChartViewer data={transformedData50} />
-        <IntensityChart data={transformedData50} />
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0', padding: '0', height: '200px' }}>
+            <PlateGifDisplay plate={plate} />
+            <IntensityChart data={transformedData50} />
+          </div>
+          <SyncedChartViewer data={transformedData50} />
+        </div>
       </div>
     </div>
   );

@@ -100,13 +100,13 @@ const PerimeterPath = ({ data, frameIndex = 0 }) => {
     <div
       style={{
         border: '1px solid #ccc',
-        width: '150px',
+        width: '200px',
         height: '200px',
         margin: '0',
-        borderRadius: '8px',
+        borderRadius: '3px',
       }}
     >
-      <canvas id={canvasId} width={150} height={200}></canvas>
+      <canvas id={canvasId} width={200} height={200}></canvas>
     </div>
   );
 };

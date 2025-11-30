@@ -37,6 +37,12 @@ const PlateImageDisplay: React.FC<PlateImageDisplayProps> = ({ plate }) => {
   const [loading, setLoading] = useState<boolean>(true); // spinner state
 
   useEffect(() => {
+    // Skip if path is missing or empty
+    if (!plate.most_recent_snippet_path) {
+      setLoading(false);
+      return;
+    }
+
     const storage = getStorage();
     const imageRef = ref(storage, plate.most_recent_snippet_path);
 
@@ -68,8 +74,8 @@ const PlateImageDisplay: React.FC<PlateImageDisplayProps> = ({ plate }) => {
     <div style={{ position: 'relative', padding: '0', margin: '0', display: 'flex' }}>
       {loading && (
         <div style={{
-          height: '200px',
-          width: '200px',
+          height: '400px',
+          width: '400px',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
@@ -88,7 +94,8 @@ const PlateImageDisplay: React.FC<PlateImageDisplayProps> = ({ plate }) => {
             src={imageUrl}
             alt={`Image for ${plate.plate}`}
             style={{
-              height: '200px',
+              height: '400px',
+              width: '400px',
               margin: '0',
               padding: '0',
               border: '1px solid #ccc',
