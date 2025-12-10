@@ -19,7 +19,8 @@ const db = getFirestore(app);
 
 const FirestoreDataComponent = () => {
   const [chamberData, setChamberData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true); // New state for loading
+  const [isLoading, setIsLoading] = useState(true);
+  const [openChambers, setOpenChambers] = useState({}); // Track open/closed state for each chamber
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,6 +50,14 @@ const FirestoreDataComponent = () => {
         );
 
         setChamberData(data);
+        
+        // Initialize all chambers as open
+        const initialOpenState = {};
+        data.forEach((chamber) => {
+          initialOpenState[chamber.chamber] = true;
+        });
+        setOpenChambers(initialOpenState);
+        
         setIsLoading(false); // Set loading to false when data is fetched
       } catch (error) {
         console.error("Error fetching data from Firestore:", error);
@@ -58,6 +67,13 @@ const FirestoreDataComponent = () => {
     fetchData();
   }, []);
 
+  const toggleChamber = (chamberId) => {
+    setOpenChambers((prev) => ({
+      ...prev,
+      [chamberId]: !prev[chamberId],
+    }));
+  };
+
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       {isLoading ? (
@@ -65,23 +81,54 @@ const FirestoreDataComponent = () => {
         <div className="spinner"></div>
       ) : (
         // Render the content when data is loaded
-        chamberData.map((chamber) => (
-          <div
-            key={chamber.creation_date}
-            style={{ padding: "0", margin: "10px", border: "1px solid #ccc", borderRadius: "3px" }}>
-            <div style={{ padding: "5px 0 0 10px" }}>
-              <strong>Chamber identifier:</strong> {chamber.chamber}
+        chamberData.map((chamber) => {
+          const isOpen = openChambers[chamber.chamber] || false;
+          
+          return (
+            <div
+              key={chamber.creation_date}
+              style={{ padding: "0", margin: "10px", border: "1px solid #ccc", borderRadius: "3px" }}>
+              <div style={{ display: 'flex', alignItems: 'center', padding: "5px 0 5px 10px" }}>
+                <div
+                  onClick={() => toggleChamber(chamber.chamber)}
+                  style={{
+                    cursor: 'pointer',
+                    userSelect: 'none',
+                    color: 'red',
+                    fontSize: '20px',
+                    marginRight: '10px',
+                    width: '20px',
+                    height: '20px',
+                    lineHeight: '20px',
+                  }}
+                >
+                  {isOpen ? '▼' : '▶'}
+                </div>
+                <div>
+                  <strong>Chamber identifier:</strong> {chamber.chamber}
+                </div>
+              </div>
+              
+              <div
+                style={{
+                  overflow: 'hidden',
+                  transition: 'max-height 0.35s ease, opacity 0.35s ease',
+                  maxHeight: isOpen ? '10000px' : '0px',
+                  opacity: isOpen ? 1 : 0,
+                }}
+              >
+                {chamber.plates.map((plate) => (
+                  <PlatesList
+                    key={plate.plate}
+                    snippets={plate.snippets}
+                    plate={plate}
+                    creation_date={chamber.creation_date}
+                  />
+                ))}
+              </div>
             </div>
-            {chamber.plates.map((plate) => (
-              <PlatesList
-                key={plate.plate}
-                snippets={plate.snippets}
-                plate={plate}
-                creation_date={chamber.creation_date}
-              />
-            ))}
-          </div>
-        ))
+          );
+        })
       )}
     </div>
   );

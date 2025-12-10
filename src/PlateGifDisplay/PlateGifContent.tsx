@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
+import PerimeterPath from '../PerimeterPathComponent';
+import GifModal from './GifModal';
 
 interface Plate {
     plate: string;
@@ -10,14 +12,16 @@ interface Plate {
     gif_path: string;
 }
 
-interface PlateGifDisplayProps {
+interface PlateGifContentProps {
     plate: Plate;
+    data?: any[];
 }
 
-const PlateGifDisplay: React.FC<PlateGifDisplayProps> = ({ plate }) => {
+const PlateGifContent: React.FC<PlateGifContentProps> = ({ plate, data = [] }) => {
     const [gifUrl, setGifUrl] = useState<string | null>(null);
     const [isHovered, setIsHovered] = useState<boolean>(false);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [hoveredFrameIndex, setHoveredFrameIndex] = useState<number>(0);
 
     useEffect(() => {
         if (!plate.gif_path) {
@@ -51,7 +55,7 @@ const PlateGifDisplay: React.FC<PlateGifDisplayProps> = ({ plate }) => {
     }, [plate.gif_path, plate.plate]);
 
     return (
-        <div style={{ padding: '0', margin: '0', display: 'flex' }}>
+        <div style={{ padding: '0', margin: '0', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
             {gifUrl ? (
                 <>
                     <div
@@ -75,34 +79,17 @@ const PlateGifDisplay: React.FC<PlateGifDisplayProps> = ({ plate }) => {
                             }}
                         />
                     </div>
+                    
+                    {/* Perimeter Path after GIF */}
+                    {data.length > 0 && (
+                        <div style={{ marginLeft: '10px' }}>
+                            <PerimeterPath data={data} frameIndex={hoveredFrameIndex} />
+                        </div>
+                    )}
 
                     {/* Modal for full-size GIF */}
                     {isModalOpen && (
-                        <div
-                            style={{
-                                position: 'fixed',
-                                top: 0,
-                                left: 0,
-                                width: '100vw',
-                                height: '100vh',
-                                backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                zIndex: 1000,
-                                cursor: 'pointer',
-                            }}
-                            onClick={() => setIsModalOpen(false)}
-                        >
-                            <img
-                                src={gifUrl}
-                                alt={`Full size GIF for ${plate.plate}`}
-                                style={{
-                                    maxWidth: '90vw',
-                                    maxHeight: '90vh',
-                                }}
-                            />
-                        </div>
+                        <GifModal src={gifUrl} onClose={() => setIsModalOpen(false)} />
                     )}
                 </>
             ) : (
@@ -129,4 +116,4 @@ const PlateGifDisplay: React.FC<PlateGifDisplayProps> = ({ plate }) => {
     );
 };
 
-export default PlateGifDisplay;
+export default PlateGifContent;

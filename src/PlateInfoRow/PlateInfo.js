@@ -12,7 +12,7 @@ function formatISODate(isoDate) {
   return new Intl.DateTimeFormat('en-US', options).format(date);
 }
 
-const PlateInfo = ({ plate, creation_date }) => {
+const PlateInfo = ({ plate }) => {
   const { plate: plateName, last_update, culture, substrate, plate_start_time } = plate;
 
   const plateStartDate = new Date(plate_start_time);
@@ -27,11 +27,11 @@ const PlateInfo = ({ plate, creation_date }) => {
   return (
     <div
       style={{
-        border: '1px solid #ccc',
+        borderLeft: '1px solid #ccc',
+        borderRight: '1px solid #ccc',
         height: '200px',
         width: '200px',
         borderRadius: '3px',
-        margin: '0 0 0 10px',
         padding: '0px',
         display: 'flex',
         flexDirection: 'column',

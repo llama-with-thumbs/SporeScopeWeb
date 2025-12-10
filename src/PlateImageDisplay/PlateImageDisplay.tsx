@@ -63,7 +63,7 @@ const PlateImageDisplay: React.FC<PlateImageDisplayProps> = ({ plate }) => {
   }, [plate.last_update]);
 
   return (
-    <div style={{ position: 'relative', padding: 0, margin: 0, display: 'flex' }}>
+    <div style={{ position: 'relative', padding: 0, margin: 0, display: 'flex', alignItems: 'center', height: '200px' }}>
       {/* Loading placeholder */}
       {loading && (
         <div
@@ -73,7 +73,8 @@ const PlateImageDisplay: React.FC<PlateImageDisplayProps> = ({ plate }) => {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            border: '1px solid #ccc',
+            borderLeft: '1px solid #ccc',
+            borderRight: '1px solid #ccc',
             borderRadius: '3px',
             backgroundColor: '#f3f3f3',
             fontSize: '16px',
@@ -97,7 +98,8 @@ const PlateImageDisplay: React.FC<PlateImageDisplayProps> = ({ plate }) => {
             style={{
               height: '200px',
               width: '200px',
-              border: '1px solid #ccc',
+              borderLeft: '1px solid #ccc',
+              borderRight: '1px solid #ccc',
               borderRadius: '3px',
               transition: 'filter 0.2s ease',
               filter: isHovered ? 'brightness(1.2) saturate(1.3)' : 'none',

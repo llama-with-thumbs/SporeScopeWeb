@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PlateImageDisplay from './PlateImageDisplay/PlateImageDisplay';
-import PlateInfo from './PlateInfo';
-import PlateGifDisplay from './PlateGifDisplay';
+import PlateInfoRow from './PlateInfoRow/PlateInfoRow';
+import PlateGifDisplay from './PlateGifDisplay/PlateGifDisplay';
 import IntensityChart from './PlateChartComponent';
 import SyncedChartViewer from './SyncedChartViewerComponent';
 
@@ -44,6 +44,8 @@ interface PlatesListProps {
 }
 
 const PlatesList: React.FC<PlatesListProps> = ({ snippets, plate, creation_date }) => {
+  const [isOpen, setIsOpen] = useState(true);
+
   // Transform the data
   const transformedData = snippets.map(({ creation_date, mean_blue_intensity, mean_green_intensity, mean_red_intensity, object_area, object_perimeter }) => ({
     timestamp_str: creation_date,
@@ -83,17 +85,41 @@ const PlatesList: React.FC<PlatesListProps> = ({ snippets, plate, creation_date 
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', margin: '0 10px' }}>
-        <div style={{ margin: '0 10px 0 0' }}>
-          <strong>Identifier: </strong>{plate.plate}
+        <div 
+          onClick={() => setIsOpen(!isOpen)}
+          style={{ 
+            cursor: 'pointer', 
+            userSelect: 'none', 
+            color: 'red', 
+            fontSize: '20px', 
+            marginRight: '10px',
+            width: '20px',
+            height: '20px',
+            lineHeight: '20px'
+          }}
+        >
+          {isOpen ? '▼' : '▶'}
+        </div>
+        <div>
+          <strong>Plate ID: </strong>{plate.plate}
         </div>
       </div>
 
-      <div style={containerStyle}>
-        <PlateImageDisplay plate={plate} />
-        <PlateInfo plate={plate} creation_date={creation_date} />
-        <PlateGifDisplay plate={plate} />
-        <IntensityChart data={transformedData50} />
-        <SyncedChartViewer data={transformedData50} />
+      <div 
+        style={{
+          overflow: 'hidden',
+          transition: 'max-height 0.35s ease, opacity 0.35s ease',
+          maxHeight: isOpen ? '220px' : '0px',
+          opacity: isOpen ? 1 : 0,
+        }}
+      >
+        <div style={containerStyle}>
+          <PlateImageDisplay plate={plate} />
+          <PlateInfoRow plate={plate} />
+          <PlateGifDisplay plate={plate} data={transformedData50} />
+          <IntensityChart data={transformedData50} />
+          <SyncedChartViewer data={transformedData50} />
+        </div>
       </div>
     </div>
   );

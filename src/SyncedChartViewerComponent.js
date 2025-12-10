@@ -10,8 +10,7 @@ const SyncedChartViewer = ({ data }) => {
   };
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0', padding: '0', height: '200px' }}>
-      <PerimeterPath data={data} frameIndex={hoveredFrameIndex} />
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: 0, padding: 0, height: '200px' }}>
       <AreaChart data={data} onFrameHover={handleFrameHover} />
     </div>
   );
