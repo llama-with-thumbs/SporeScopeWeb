@@ -13,22 +13,22 @@ function formatISODate(isoDate) {
 }
 
 const PlateInfo = ({ plate, creation_date }) => {
-  const { plate: plateName, last_update, culture, substrate } = plate;
+  const { plate: plateName, last_update, culture, substrate, plate_start_time } = plate;
 
-  const creationDate = new Date(creation_date);
-  const lastUpdate = new Date(last_update);
+  const plateStartDate = new Date(plate_start_time);
+  const currentDate = new Date();
   const timeDifferenceHours = Math.floor(
-    (lastUpdate - creationDate) / (1000 * 60 * 60)
+    (currentDate - plateStartDate) / (1000 * 60 * 60)
   );
 
-  const formatted_creation_date = formatISODate(creation_date);
+  const formatted_creation_date = formatISODate(plate_start_time);
   const formatted_last_update = formatISODate(last_update);
 
   return (
     <div
       style={{
         border: '1px solid #ccc',
-        height: '400px',
+        height: '200px',
         width: '200px',
         borderRadius: '3px',
         margin: '0 0 0 10px',
@@ -59,6 +59,9 @@ const PlateInfo = ({ plate, creation_date }) => {
         </div>
         <div>
           <strong>Start date:</strong> {formatted_creation_date}
+        </div>
+        <div>
+          <strong>Last Update:</strong> {formatted_last_update}
         </div>
         <div>
           <strong>Elapsed Time:</strong> {timeDifferenceHours} hours

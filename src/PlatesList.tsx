@@ -1,5 +1,5 @@
 import React from 'react';
-import PlateImageDisplay from './PlateImageDisplay';
+import PlateImageDisplay from './PlateImageDisplay/PlateImageDisplay';
 import PlateInfo from './PlateInfo';
 import PlateGifDisplay from './PlateGifDisplay';
 import IntensityChart from './PlateChartComponent';
@@ -77,6 +77,7 @@ const PlatesList: React.FC<PlatesListProps> = ({ snippets, plate, creation_date 
     lineHeight: 'normal',
     margin: '5px 10px',
     padding: '0px 10px',
+    height: '200px',
   };
 
   return (
@@ -85,21 +86,14 @@ const PlatesList: React.FC<PlatesListProps> = ({ snippets, plate, creation_date 
         <div style={{ margin: '0 10px 0 0' }}>
           <strong>Identifier: </strong>{plate.plate}
         </div>
-        <div>
-          <strong>Last Update: </strong>{formatISODate(plate.last_update)}
-        </div>
       </div>
 
       <div style={containerStyle}>
         <PlateImageDisplay plate={plate} />
         <PlateInfo plate={plate} creation_date={creation_date} />
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0', padding: '0', height: '200px' }}>
-            <PlateGifDisplay plate={plate} />
-            <IntensityChart data={transformedData50} />
-          </div>
-          <SyncedChartViewer data={transformedData50} />
-        </div>
+        <PlateGifDisplay plate={plate} />
+        <IntensityChart data={transformedData50} />
+        <SyncedChartViewer data={transformedData50} />
       </div>
     </div>
   );
