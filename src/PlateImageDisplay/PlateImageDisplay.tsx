@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 import ImageModal from './ImageModal';
 import { calculateTimeAgo, renderTimeAgo } from './imageUtils';
+import RulerOverlay from "./RulerOverlay";
 
 interface Plate {
   plate: string;
@@ -105,6 +106,9 @@ const PlateImageDisplay: React.FC<PlateImageDisplayProps> = ({ plate }) => {
               filter: isHovered ? 'brightness(1.2) saturate(1.3)' : 'none',
             }}
           />
+
+          {/* 🔥 Add ruler overlay here */}
+          <RulerOverlay/>
 
           {/* Timestamp */}
           <p
