@@ -1,10 +1,9 @@
+// PerimeterDrawer.tsx
+
 import React, { useState } from "react";
+import PerimeterPath from "./PerimeterPathComponent";
 
-interface Props {
-  children: React.ReactNode;
-}
-
-const PlateGifRowContainer: React.FC<Props> = ({ children }) => {
+const PerimeterDrawer = ({ data }) => {
   const [open, setOpen] = useState(true);
 
   return (
@@ -27,8 +26,6 @@ const PlateGifRowContainer: React.FC<Props> = ({ children }) => {
       >
         <div
           onClick={() => setOpen(!open)}
-          onMouseEnter={(e) => e.currentTarget.style.color = "#cc0000"}
-          onMouseLeave={(e) => e.currentTarget.style.color = "red"}
           style={{
             width: "20px",
             height: "20px",
@@ -37,7 +34,6 @@ const PlateGifRowContainer: React.FC<Props> = ({ children }) => {
             color: "red",
             fontSize: "20px",
             lineHeight: "20px",
-            transition: "color 0.2s ease",
           }}
         >
           {open ? "▼" : "▶"}
@@ -49,14 +45,19 @@ const PlateGifRowContainer: React.FC<Props> = ({ children }) => {
         style={{
           overflow: "hidden",
           transition: "width 0.35s ease, opacity 0.35s ease",
-          width: open ? "200px" : "0px",
+          width: open ? "200px" : "0px",  // Same as GIF drawer
           opacity: open ? 1 : 0,
         }}
       >
-        {open && <div style={{ width: "360px" }}>{children}</div>}
+        {open && (
+          <div style={{ width: "200px" }}>
+            {/* The actual perimeter component */}
+            <PerimeterPath data={data} />
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-export default PlateGifRowContainer;
+export default PerimeterDrawer;

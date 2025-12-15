@@ -108,24 +108,23 @@ const PlateImageDisplay: React.FC<PlateImageDisplayProps> = ({ plate }) => {
           />
 
           {/* 🔥 Add ruler overlay here */}
-          <RulerOverlay/>
+          <RulerOverlay />
 
           {/* Timestamp */}
           <p
             style={{
               position: 'absolute',
-              top: '5px',
-              left: '5px',
-              color: '#00ff00',
+              top: '10px',
+              left: '10px',
               margin: 0,
               fontSize: '12px',
+              fontWeight: 'bold',
+              color: minutesAgo !== null && minutesAgo < 30 ? '#00ff00' : '#ff4444',
             }}
           >
-            Last Update:{' '}
-            {minutesAgo !== null
-              ? renderTimeAgo(...calculateTimeAgo(minutesAgo))
-              : 'N/A'}
+            {minutesAgo !== null && minutesAgo < 30 ? "LIVE" : "OFFLINE"}
           </p>
+
         </div>
       )}
 

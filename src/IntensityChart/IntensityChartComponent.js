@@ -57,7 +57,7 @@ const CustomTooltip = ({ active, payload, label }) => {
   return null;
 };
 
-const IntensityChart = ({ data }) => {
+const IntensityChartComponent = ({ data }) => {
   const sortedData = [...data].sort((a, b) => {
     return a.timestamp_str.localeCompare(b.timestamp_str);
   });
@@ -124,4 +124,4 @@ const IntensityChart = ({ data }) => {
   );
 };
 
-export default IntensityChart;
+export default IntensityChartComponent;

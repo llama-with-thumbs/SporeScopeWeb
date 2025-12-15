@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
-import PerimeterPath from '../PerimeterPathComponent';
 import GifModal from './GifModal';
 
 interface Plate {
@@ -14,14 +13,13 @@ interface Plate {
 
 interface PlateGifContentProps {
     plate: Plate;
-    data?: any[];
+    data?: any[];  // kept but unused, safe to remove later
 }
 
-const PlateGifContent: React.FC<PlateGifContentProps> = ({ plate, data = [] }) => {
+const PlateGifContent: React.FC<PlateGifContentProps> = ({ plate }) => {
     const [gifUrl, setGifUrl] = useState<string | null>(null);
     const [isHovered, setIsHovered] = useState<boolean>(false);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-    const [hoveredFrameIndex, setHoveredFrameIndex] = useState<number>(0);
 
     useEffect(() => {
         if (!plate.gif_path) {
@@ -34,8 +32,7 @@ const PlateGifContent: React.FC<PlateGifContentProps> = ({ plate, data = [] }) =
 
         const storage = getStorage();
 
-        // If gif_path is like "gs://bio-chart.appspot.com/CHA-.../Gifs/A.gif"
-        // convert it to a path inside the bucket
+        // Convert gs:// URL if needed
         let storagePath = plate.gif_path;
         if (storagePath.startsWith('gs://bio-chart.appspot.com/')) {
             storagePath = storagePath.replace('gs://bio-chart.appspot.com/', '');
@@ -79,15 +76,8 @@ const PlateGifContent: React.FC<PlateGifContentProps> = ({ plate, data = [] }) =
                             }}
                         />
                     </div>
-                    
-                    {/* Perimeter Path after GIF */}
-                    {data.length > 0 && (
-                        <div style={{ marginLeft: '10px' }}>
-                            <PerimeterPath data={data} frameIndex={hoveredFrameIndex} />
-                        </div>
-                    )}
 
-                    {/* Modal for full-size GIF */}
+                    {/* Full-screen GIF modal */}
                     {isModalOpen && (
                         <GifModal src={gifUrl} onClose={() => setIsModalOpen(false)} />
                     )}

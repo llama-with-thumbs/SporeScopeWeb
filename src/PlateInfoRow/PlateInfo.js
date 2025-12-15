@@ -30,7 +30,7 @@ const PlateInfo = ({ plate }) => {
         borderLeft: '1px solid #ccc',
         borderRight: '1px solid #ccc',
         height: '200px',
-        width: '200px',
+        width: '310px',
         borderRadius: '3px',
         padding: '0px',
         display: 'flex',

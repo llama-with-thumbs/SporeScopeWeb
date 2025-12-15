@@ -91,6 +91,8 @@ const FirestoreDataComponent = () => {
               <div style={{ display: 'flex', alignItems: 'center', padding: "5px 0 5px 10px" }}>
                 <div
                   onClick={() => toggleChamber(chamber.chamber)}
+                  onMouseEnter={(e) => e.currentTarget.style.color = '#cc0000'}
+                  onMouseLeave={(e) => e.currentTarget.style.color = 'red'}
                   style={{
                     cursor: 'pointer',
                     userSelect: 'none',
@@ -100,6 +102,7 @@ const FirestoreDataComponent = () => {
                     width: '20px',
                     height: '20px',
                     lineHeight: '20px',
+                    transition: 'color 0.2s ease',
                   }}
                 >
                   {isOpen ? '▼' : '▶'}

@@ -1,73 +1,58 @@
 import React from "react";
 
-interface RulerOverlayProps {
-  mm?: number;        // physical width the ruler represents
-  height?: number;    // total height of the ruler in px
-  color?: string;     // tick + text color
-  offset?: number;    // distance from bottom in px
+interface MiniRulerProps {
+  mm?: number; // length in mm, default 10mm
 }
 
-const RulerOverlay: React.FC<RulerOverlayProps> = ({
-  mm = 58,
-  height = 24,
-  color = "lime",
-  offset = 4,
-}) => {
-  // Create array [0, 1, 2, ..., mm-1]
-  const ticks = Array.from({ length: mm + 1 }, (_, i) => i);
-
+const MiniRuler: React.FC<MiniRulerProps> = ({ mm = 10 }) => {
   return (
     <div
       style={{
         position: "absolute",
-        bottom: `${offset}px`,
-        left: "50%",
-        transform: "translateX(-50%)",
-        width: `${mm}mm`,
-        height: `${height}px`,
+        bottom: "10px",
+        left: "10px",
+        width: `${mm}mm`,        // ← preserves REAL scale
+        height: "30px",
         display: "flex",
-        justifyContent: "space-between",
+        flexDirection: "row",
         pointerEvents: "none",
-        opacity: 0.95,
       }}
     >
-      {ticks.map((i) => {
-        const isMajor = i % 10 === 0;
-        const isMedium = i % 5 === 0;
-
-        const tickHeight = isMajor ? height : isMedium ? height * 0.6 : height * 0.35;
-        const showNumber = isMajor && i !== 0 && i !== mm;
+      {Array.from({ length: mm + 1 }).map((_, i) => {
+        const isMajor = i === 0 || i === mm;
+        const tickHeight = isMajor ? 20 : 10;
 
         return (
           <div
             key={i}
             style={{
               display: "flex",
-              alignItems: "flex-end",
               flexDirection: "column",
-              width: "1px",
+              alignItems: "center",
+              justifyContent: "flex-start",
+              width: `${1}mm`,   // each mm gets its own block = real scale
             }}
           >
-            {/* TICK */}
+            {/* tick line */}
             <div
               style={{
                 width: "2px",
                 height: `${tickHeight}px`,
-                backgroundColor: color,
+                backgroundColor: "lime",
               }}
             />
 
-            {/* NUMBER (below the tick) */}
-            {showNumber && (
+            {/* labels: show "0" and "1" cm only */}
+            {isMajor && (
               <span
                 style={{
-                  fontSize: "9px",
                   marginTop: "2px",
-                  color: color,
-                  transform: "translateX(-3px)",
+                  fontSize: "12px",
+                  fontWeight: "bold",
+                  color: "lime",
                 }}
               >
-                {i}
+                {i === 0 ? "0" : "1"}
               </span>
             )}
           </div>
@@ -77,4 +62,4 @@ const RulerOverlay: React.FC<RulerOverlayProps> = ({
   );
 };
 
-export default RulerOverlay;
+export default MiniRuler;
