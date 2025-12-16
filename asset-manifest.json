@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/SporeScopeWeb/static/css/main.feddb0c6.css",
-    "main.js": "/SporeScopeWeb/static/js/main.bb43bbb2.js",
+    "main.js": "/SporeScopeWeb/static/js/main.b8f400be.js",
     "static/js/453.34572a62.chunk.js": "/SporeScopeWeb/static/js/453.34572a62.chunk.js",
     "index.html": "/SporeScopeWeb/index.html",
     "main.feddb0c6.css.map": "/SporeScopeWeb/static/css/main.feddb0c6.css.map",
-    "main.bb43bbb2.js.map": "/SporeScopeWeb/static/js/main.bb43bbb2.js.map",
+    "main.b8f400be.js.map": "/SporeScopeWeb/static/js/main.b8f400be.js.map",
     "453.34572a62.chunk.js.map": "/SporeScopeWeb/static/js/453.34572a62.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.feddb0c6.css",
-    "static/js/main.bb43bbb2.js"
+    "static/js/main.b8f400be.js"
   ]
 }
