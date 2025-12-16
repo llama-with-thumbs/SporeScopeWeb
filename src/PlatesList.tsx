@@ -7,18 +7,7 @@ import PlateGifDisplay from './PlateGifDisplay/PlateGifDisplay';
 import IntensityChartDrawer from './IntensityChart/IntensityChartDrawer';
 import SyncedChartViewer from './AreaChart/SyncedChartViewerComponent';
 import { calculateTimeAgo, renderTimeAgo } from "./PlateImageDisplay/imageUtils";
-import PerimeterDrawer  from './PerimeterDrawer/PerimeterDrawer'
-
-function formatISODate(isoDate: string): string {
-  const date = new Date(isoDate);
-  return date.toLocaleString("en-US", {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  });
-}
+import PerimeterDrawer from './PerimeterDrawer/PerimeterDrawer';
 
 interface Snippet {
   chamber: string;
@@ -41,35 +30,25 @@ interface PlatesListProps {
     most_recent_snippet_path: string;
     substrate: string;
     gif_path: string;
+    shapes: any[];          // ✔ make shapes an array
   };
   creation_date: string;
 }
 
 const PlatesList: React.FC<PlatesListProps> = ({ snippets, plate, creation_date }) => {
 
-  // compute minutes from last update
-  const computeMinutesAgo = () => {
-    const last = new Date(plate.last_update).getTime();
-    const now = Date.now();
-    return Math.floor((now - last) / 60000);
-  };
+  const computeMinutesAgo = () =>
+    Math.floor((Date.now() - new Date(plate.last_update).getTime()) / 60000);
 
-  // Live-updating minutes-ago state
   const [minutesAgo, setMinutesAgo] = useState<number>(computeMinutesAgo());
-
-  // 🔥 Drawer default state depends on age:
   const olderThanOneDay = minutesAgo > 1440;
   const [isOpen, setIsOpen] = useState(!olderThanOneDay);
 
-  // 🔥 Update minutes-ago every 60 seconds
   useEffect(() => {
-    const update = () => setMinutesAgo(computeMinutesAgo());
-    const id = setInterval(update, 60000);
-    update();
+    const id = setInterval(() => setMinutesAgo(computeMinutesAgo()), 60000);
     return () => clearInterval(id);
   }, [plate.last_update]);
 
-  // Transform snippet data
   const transformedData = snippets.map(s => ({
     timestamp_str: s.creation_date,
     mean_blue_intensity: s.mean_blue_intensity,
@@ -79,27 +58,29 @@ const PlatesList: React.FC<PlatesListProps> = ({ snippets, plate, creation_date 
     object_perimeter: s.object_perimeter
   }));
 
-  const getEquallySpacedData = (data: typeof transformedData, target = 50) => {
+  const getEquallySpacedData = (data: any[], target = 50) => {
     if (data.length <= target) return data;
     const step = Math.floor(data.length / target);
     return data.filter((_, i) => i % step === 0).slice(0, target);
   };
 
+
   const transformedData50 = getEquallySpacedData(transformedData);
 
   return (
     <div>
-      {/* ---------- HEADER LINE ---------- */}
+
+      {/* HEADER */}
       <div style={{ display: 'flex', alignItems: 'center', margin: '0 10px' }}>
-        <div 
+        <div
           onClick={() => setIsOpen(!isOpen)}
-          onMouseEnter={(e) => e.currentTarget.style.color = '#cc0000'}
-          onMouseLeave={(e) => e.currentTarget.style.color = 'red'}
-          style={{ 
-            cursor: 'pointer', 
-            userSelect: 'none', 
-            color: 'red', 
-            fontSize: '20px', 
+          onMouseEnter={e => e.currentTarget.style.color = '#cc0000'}
+          onMouseLeave={e => e.currentTarget.style.color = 'red'}
+          style={{
+            cursor: 'pointer',
+            userSelect: 'none',
+            color: 'red',
+            fontSize: '20px',
             marginRight: '10px',
             width: '20px',
             height: '20px',
@@ -108,15 +89,17 @@ const PlatesList: React.FC<PlatesListProps> = ({ snippets, plate, creation_date 
           }}
         >
           {isOpen ? '▼' : '▶'}
-        </div>        <div style={{ fontSize: '16px' }}>
+        </div>
+
+        <div style={{ fontSize: '16px' }}>
           <strong>Plate ID:</strong> {plate.plate}
-          <span style={{ marginLeft: '10px', color: minutesAgo > 1440 ? 'red' : 'green' }}>
+          <span style={{ marginLeft: '10px', color: minutesAgo > 30 ? 'red' : 'green' }}>
             • Last update: {renderTimeAgo(...calculateTimeAgo(minutesAgo))}
           </span>
         </div>
       </div>
 
-      {/* ---------- EXPANDABLE CONTENT ---------- */}
+      {/* DRAWER */}
       <div
         style={{
           overflow: 'hidden',
@@ -140,7 +123,10 @@ const PlatesList: React.FC<PlatesListProps> = ({ snippets, plate, creation_date 
           <PlateImageDisplay plate={plate} />
           <PlateInfoRow plate={plate} />
           <PlateGifDisplay plate={plate} data={transformedData50} />
-          <PerimeterDrawer data={transformedData50} />
+
+          {/* ✔ SHAPES GO INTO PARAMETER DRAWER */}
+          <PerimeterDrawer data={plate.shapes} />
+
           <IntensityChartDrawer data={transformedData50} />
           <SyncedChartViewer data={transformedData50} />
         </div>
