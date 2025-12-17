@@ -16,7 +16,7 @@ const PerimeterPathComponent = ({ shapes }) => {
     // ------------------------------------------
     const ORIGINAL_SIZE = 500;   // image-space (your shape coordinates)
     const CANVAS_SIZE = 200;     // visible component size
-    const PADDING = 10;          // small inner padding
+    const PADDING = 0;          // small inner padding
 
     const drawableSize = CANVAS_SIZE - PADDING * 2;
     const scale = drawableSize / ORIGINAL_SIZE;
@@ -49,6 +49,22 @@ const PerimeterPathComponent = ({ shapes }) => {
       ctx.fill();
       ctx.stroke();
     });
+
+    // -----------------------------------------------------
+    // 🔵 DRAW THIN BLUE CIRCLE REPRESENTING THE REAL PLATE
+    // -----------------------------------------------------
+    const originalRadius = ORIGINAL_SIZE / 2;  // 250 px in original coords
+    const scaledRadius = originalRadius * scale;
+
+    const centerX = offsetX + scaledRadius;
+    const centerY = offsetY + scaledRadius;
+
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, scaledRadius, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(0, 60, 255, 0.9)";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
   }, [shapes]);
 
   return (

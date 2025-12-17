@@ -13,7 +13,14 @@ function formatISODate(isoDate) {
 }
 
 const PlateInfo = ({ plate }) => {
-  const { plate: plateName, last_update, culture, substrate, plate_start_time } = plate;
+  const { 
+    plate: plateName, 
+    last_update, 
+    culture, 
+    substrate, 
+    plate_start_time,
+    total_shape_area_mm2       // ✅ NEW FIELD
+  } = plate;
 
   const plateStartDate = new Date(plate_start_time);
   const currentDate = new Date();
@@ -51,8 +58,7 @@ const PlateInfo = ({ plate }) => {
         </h3>
         <div>
           <strong>Seeded culture:</strong> {culture}
-          <a href={culture} target="_blank" rel="noopener noreferrer">
-          </a>
+          <a href={culture} target="_blank" rel="noopener noreferrer"></a>
         </div>
         <div>
           <strong>Substrate:</strong> {substrate}
@@ -65,6 +71,11 @@ const PlateInfo = ({ plate }) => {
         </div>
         <div>
           <strong>Elapsed Time:</strong> {timeDifferenceHours} hours
+        </div>
+
+        {/* ✅ NEW FIELD */}
+        <div>
+          <strong>Total Shape Area:</strong> {total_shape_area_mm2 ?? "—"} mm²
         </div>
       </div>
     </div>
