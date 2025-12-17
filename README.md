@@ -10,8 +10,18 @@ The system loads structured experiment data from Firestore, processes it, and pr
 
 # Data model
 Here is a schematic representation of the data model that was established to better accommodate the growing project, employing an ontology-based approach in its creation.
+
 ![data model](https://firebasestorage.googleapis.com/v0/b/bio-chart.appspot.com/o/Bio-chart%20Assets%2FChamber-flask-model.png?alt=media&token=d89aa493-8749-42cf-ba25-f43fd4dba40a)
 
+
+# Technology Stack
+
+- React + TypeScript (UI)
+- Firebase Firestore (data storage)
+- Firebase Storage (image hosting)
+- JavaScript/Canvas for polygon rendering
+- Recharts for time-series visualizations
+- Conventional Commits, GitHub Pages deployment
 
 # Image Processing
 Images are collected by Raspberry Pi cameras and preprocessed:
