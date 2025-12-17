@@ -9,9 +9,9 @@ The system loads structured experiment data from Firestore, processes it, and pr
 ![app interface](https://firebasestorage.googleapis.com/v0/b/sporescope.firebasestorage.app/o/Assets%2FScreenshot%202025-12-16%20151047.png?alt=media&token=c83a15da-34ed-4abf-92eb-2c0bb16e5a67)
 
 # Data model
-Here is a schematic representation of the data model that was established to better accommodate the growing project, employing an ontology-based approach in its creation.
+his schematic representation outlines the ontology-based data model used in the project, showing how experimental entities—such as chambers, plates, and analytical snippets—are organized in Firestore and linked to related assets stored in Firebase Storage. It provides a clear structural view of how data is connected and scaled across the system.
 
-![data model](https://firebasestorage.googleapis.com/v0/b/bio-chart.appspot.com/o/Bio-chart%20Assets%2FChamber-flask-model.png?alt=media&token=d89aa493-8749-42cf-ba25-f43fd4dba40a)
+![data model](https://firebasestorage.googleapis.com/v0/b/sporescope.firebasestorage.app/o/Assets%2FChamber-flask-model.drawio.png?alt=media&token=cb922253-0f0b-4af3-9451-b2d95e402105)
 
 
 # Technology Stack
