@@ -28,8 +28,6 @@ const PlateGifContent: React.FC<PlateGifContentProps> = ({ plate }) => {
             return;
         }
 
-        console.log('gif_path from Firestore:', plate.gif_path);
-
         const storage = getStorage();
 
         // Convert gs:// URL if needed
@@ -42,7 +40,6 @@ const PlateGifContent: React.FC<PlateGifContentProps> = ({ plate }) => {
 
         getDownloadURL(gifRef)
             .then((url) => {
-                console.log('Resolved GIF URL:', url);
                 setGifUrl(url);
             })
             .catch((err) => {

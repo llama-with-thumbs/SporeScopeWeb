@@ -75,8 +75,6 @@ const FirestoreDataComponent = () => {
                         id: shapeDoc.id,
                         ...shapeDoc.data(),
                       }));
-
-                      console.log("SHAPES for plate:", plate.plate, shapesData);
                     }
                   } catch (err) {
                     console.error("Error fetching shapes via most_recent_snippet_in_firestore_path:", err);

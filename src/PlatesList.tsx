@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import PlateImageDisplay from './PlateImageDisplay/PlateImageDisplay';
-import PlateInfoRow from './PlateInfoRow/PlateInfoRow';
+import CultureProfile from './CultureProfile/CultureProfile';
+import GPTAnalysis from './GPTAnalysis/GPTAnalysis';
 import PlateGifDisplay from './PlateGifDisplay/PlateGifDisplay';
 import IntensityChartDrawer from './IntensityChart/IntensityChartDrawer';
-import SyncedChartViewer from './AreaChart/SyncedChartViewerComponent';
+import AreaChartDrawer from './AreaChart/AreaChartDrawer';
 import { calculateTimeAgo, renderTimeAgo } from "./PlateImageDisplay/imageUtils";
 import PerimeterDrawer from './PerimeterDrawer/PerimeterDrawer';
 
@@ -19,6 +20,7 @@ interface Snippet {
   path: string;
   object_area: string;
   object_perimeter: string;
+  total_shape_area_mm2: number;
 }
 
 interface PlatesListProps {
@@ -55,10 +57,11 @@ const PlatesList: React.FC<PlatesListProps> = ({ snippets, plate, creation_date 
     mean_green_intensity: s.mean_green_intensity,
     mean_red_intensity: s.mean_red_intensity,
     object_area: s.object_area,
-    object_perimeter: s.object_perimeter
+    object_perimeter: s.object_perimeter,
+    total_shape_area_mm2: s.total_shape_area_mm2
   }));
 
-  const getEquallySpacedData = (data: any[], target = 50) => {
+  const getEquallySpacedData = (data: any[], target = 450) => {
     if (data.length <= target) return data;
     const step = Math.floor(data.length / target);
     return data.filter((_, i) => i % step === 0).slice(0, target);
@@ -121,14 +124,15 @@ const PlatesList: React.FC<PlatesListProps> = ({ snippets, plate, creation_date 
           }}
         >
           <PlateImageDisplay plate={plate} />
-          <PlateInfoRow plate={plate} />
+          <CultureProfile plate={plate} />
+          <GPTAnalysis plate={plate} />
           <PlateGifDisplay plate={plate} data={transformedData50} />
 
           {/* ✔ SHAPES GO INTO PARAMETER DRAWER */}
           <PerimeterDrawer data={plate.shapes} />
-
+ 
           <IntensityChartDrawer data={transformedData50} />
-          <SyncedChartViewer data={transformedData50} />
+          <AreaChartDrawer data={transformedData50} />
         </div>
       </div>
     </div>

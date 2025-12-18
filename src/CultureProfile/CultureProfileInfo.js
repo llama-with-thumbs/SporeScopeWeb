@@ -12,7 +12,7 @@ function formatISODate(isoDate) {
   return new Intl.DateTimeFormat('en-US', options).format(date);
 }
 
-const PlateInfo = ({ plate }) => {
+const CultureProfileInfo = ({ plate }) => {
   const { 
     plate: plateName, 
     last_update, 
@@ -37,7 +37,7 @@ const PlateInfo = ({ plate }) => {
         borderLeft: '1px solid #ccc',
         borderRight: '1px solid #ccc',
         height: '200px',
-        width: '310px',
+        width: '290px',
         borderRadius: '3px',
         padding: '0px',
         display: 'flex',
@@ -54,7 +54,7 @@ const PlateInfo = ({ plate }) => {
             fontSize: 'clamp(12px, 2vw, 16px)',
           }}
         >
-          Parameters
+          Culture Profile
         </h3>
         <div>
           <strong>Seeded culture:</strong> {culture}
@@ -82,4 +82,4 @@ const PlateInfo = ({ plate }) => {
   );
 };
 
-export default PlateInfo;
+export default CultureProfileInfo;

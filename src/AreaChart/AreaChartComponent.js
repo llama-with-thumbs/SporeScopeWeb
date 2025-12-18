@@ -1,127 +1,107 @@
 import React from "react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
 
-// Function to smooth the area data over a moving average window
+// Smooth area values using moving average
 const calculateMovingAverage = (data, windowSize) => {
   const smoothedData = [];
 
   for (let i = 0; i < data.length; i++) {
-    let sumArea = 0;
+    let sum = 0;
     let count = 0;
 
-    for (let j = Math.max(0, i - windowSize); j <= i; j++) {
-      sumArea += data[j].object_area;
+    for (let j = Math.max(0, i - windowSize + 1); j <= i; j++) {
+      const val = data[j].total_shape_area_mm2 ?? 0;
+      sum += Number(val) || 0;
       count++;
     }
 
     smoothedData.push({
       ...data[i],
-      object_area: (sumArea / count).toFixed(2),
+      display_area: Number((sum / count).toFixed(2)),
     });
   }
 
   return smoothedData;
 };
 
-// Custom tooltip for displaying time and area information
+// Tooltip component
 const CustomTooltip = ({ active, payload, label }) => {
-  if (active && payload && payload.length) {
-    const formattedDate = new Date(label).toLocaleString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
-    });
+  if (!active || !payload || !payload.length) return null;
 
-    return (
-      <div
-        style={{
-          border: "1px solid #ccc",
-          borderRadius: "2px",
-          margin: "0, 5px",
-          padding: "0, 5px",
-          lineHeight: "0.2",
-        }}>
-        <p>{`Timestamp: ${formattedDate}`}</p>
-        <p>{`Object Area: ${payload[0].value}`}</p>
-      </div>
-    );
-  }
+  const date = new Date(label);
+  const rawValue = payload[0].payload.total_shape_area_mm2;
 
-  return null;
+  return (
+    <div style={{ border: "1px solid #ccc", padding: "4px" }}>
+      <p>{date.toLocaleString()}</p>
+      {rawValue == null ? (
+        <p>no data for this period</p>
+      ) : (
+        <p>{`Total shape area: ${rawValue} mm²`}</p>
+      )}
+    </div>
+  );
 };
 
 const AreaChart = ({ data, onFrameHover }) => {
-  // Filter out data points where object_area is NaN
-  const filteredData = data.filter((item) => !isNaN(item.object_area));
+  if (!data || !data.length) return null;
 
-  // Sort data by timestamp
-  const sortedData = [...filteredData].sort((a, b) => new Date(a.timestamp_str) - new Date(b.timestamp_str));
+  const sorted = [...data]
+    .filter((d) => !isNaN(Number(d.total_shape_area_mm2 ?? 0)))
+    .sort((a, b) => new Date(a.timestamp_str) - new Date(b.timestamp_str));
 
-  // Smooth data using a moving average with a window size of 5
-  const smoothedData = calculateMovingAverage(sortedData, 5);
+  const smoothed = calculateMovingAverage(sorted, 5);
+  if (!smoothed.length) return null;
 
-  // Get min and max from smoothedData for Y-axis range, and slightly increase the range
-  const objectAreas = smoothedData.map((d) => parseFloat(d.object_area));
-  let minArea = Math.min(...objectAreas);
-  let maxArea = Math.max(...objectAreas);
+  const values = smoothed.map((d) => d.display_area);
+  let minArea = Math.min(...values);
+  let maxArea = Math.max(...values);
 
-  // Slightly increase the range and round to nearest whole number
-  minArea = Math.floor(minArea - 0.05 * minArea); // Reduce min by 5%
-  maxArea = Math.ceil(maxArea + 0.05 * maxArea); // Increase max by 5%
+  minArea = Math.floor(minArea - minArea * 0.1);
+  maxArea = Math.ceil(maxArea + maxArea * 0.1);
 
-  // Handle mouse movement over the chart
   const handleMouseMove = (state) => {
-    if (state && state.activeTooltipIndex != null) {
-      onFrameHover(state.activeTooltipIndex); // Notify parent component about the hovered frame
+    if (state?.activeTooltipIndex != null) {
+      onFrameHover(state.activeTooltipIndex);
     }
   };
 
   return (
-    <div
-      className="chart-box"
-      style={{
-        border: "1px solid #ccc",
-        borderRadius: "3px",
-        margin: "10px",
-        padding: "0 10px",
-      }}>
-      <LineChart
-        width={400}
-        height={200}
-        data={smoothedData}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={() => onFrameHover(0)} // Reset to the first frame when mouse leaves
-      >
-        <XAxis
-          dataKey="timestamp_str"
-          tickFormatter={(timestamp) => {
-            const formattedDate = new Date(timestamp).toLocaleString("en-GB", {
-              day: "numeric",
-              month: "short", // Show abbreviated month name (e.g., "Jan", "Feb")
-            });
-            return formattedDate;
-          }}
-        />
-        <YAxis
-          domain={[minArea, maxArea]}
-          label={{ value: "Area", angle: -90, position: "insideLeft" }}
-          tickFormatter={(value) => {
-            // Format value for thousands with "k" and round it
-            if (value >= 1000) {
-              return `${(value / 1000).toFixed(1)}k`; // Display thousands with 1 decimal point and "k"
-            }
-            return Math.round(value).toLocaleString(); // Round other values
-          }}
-        />
-        <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
-        <Tooltip content={<CustomTooltip />} />
-        <Legend />
-        <Line type="monotone" dataKey="object_area" name="Object Area" stroke="#8884d8" strokeWidth={2} dot={false} />
-      </LineChart>
-    </div>
+    <LineChart
+      width={400}
+      height={200}
+      data={smoothed}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={() => onFrameHover(null)}
+    >
+      <XAxis
+        dataKey="timestamp_str"
+        tickFormatter={(ts) =>
+          new Date(ts).toLocaleDateString("en-GB", {
+            day: "numeric",
+            month: "short",
+          })
+        }
+      />
+
+      <YAxis
+        domain={[minArea, maxArea]}
+        tickFormatter={(v) =>
+          v >= 1000 ? `${(v / 1000).toFixed(1)}k` : Math.round(v)
+        }
+      />
+
+      <CartesianGrid strokeDasharray="5 5" />
+      <Tooltip content={<CustomTooltip />} />
+
+      <Line
+        type="monotone"
+        dataKey="display_area"
+        stroke="#8884d8"
+        strokeWidth={2}
+        dot={false}
+      />
+    </LineChart>
   );
 };
 

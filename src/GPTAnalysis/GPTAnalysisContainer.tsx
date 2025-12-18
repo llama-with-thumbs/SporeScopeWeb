@@ -1,18 +1,24 @@
 import React, { useState } from "react";
-import AreaChart from "./AreaChartComponent";
 
-const SyncedChartViewer = ({ data }) => {
-  const [open, setOpen] = useState(false);
-  const [hoveredFrameIndex, setHoveredFrameIndex] = useState(0);
+interface Props {
+  children: React.ReactNode;
+  label?: string;
+}
 
-  const handleFrameHover = (index) => {
-    setHoveredFrameIndex(index);
-  };
+const GPTAnalysisContainer: React.FC<Props> = ({ children, label = "GPT Analysis" }) => {
+  const [open, setOpen] = useState(true);
 
   return (
-    <div style={{ display: "flex", alignItems: "flex-start", margin: 0, padding: 0 }}>
-      
-      {/* Arrow + label */}
+    <div
+      style={{
+        display: "flex",
+        alignItems: "flex-start",
+        margin: 0,
+        padding: 0,
+      }}
+    >
+
+      {/* Arrow + label container */}
       <div
         style={{
           height: "200px",
@@ -22,8 +28,11 @@ const SyncedChartViewer = ({ data }) => {
           marginRight: "6px",
         }}
       >
+        {/* Arrow button */}
         <div
           onClick={() => setOpen(!open)}
+          onMouseEnter={(e) => e.currentTarget.style.color = "#cc0000"}
+          onMouseLeave={(e) => e.currentTarget.style.color = "red"}
           style={{
             width: "20px",
             height: "20px",
@@ -32,11 +41,13 @@ const SyncedChartViewer = ({ data }) => {
             color: "red",
             fontSize: "20px",
             lineHeight: "20px",
+            transition: "color 0.2s ease",
           }}
         >
           {open ? "▼" : "▶"}
         </div>
 
+        {/* Label appears only when closed */}
         {!open && (
           <div
             style={{
@@ -47,26 +58,25 @@ const SyncedChartViewer = ({ data }) => {
               writingMode: "vertical-rl",
               transform: "rotate(180deg)",
               opacity: 0.85,
-              pointerEvents: "none",
             }}
           >
-            Area Chart
+            {label}
           </div>
         )}
       </div>
 
-      {/* Drawer */}
+      {/* Collapsible drawer */}
       <div
         style={{
           overflow: "hidden",
           transition: "width 0.35s ease, opacity 0.35s ease",
-          width: open ? "400px" : "0px",
+          width: open ? "200px" : "0px",
           opacity: open ? 1 : 0,
         }}
       >
         {open && (
-          <div style={{ width: "400px", height: "200px" }}>
-            <AreaChart data={data} onFrameHover={handleFrameHover} />
+          <div style={{ width: "200px" }}>
+            {children}
           </div>
         )}
       </div>
@@ -75,4 +85,4 @@ const SyncedChartViewer = ({ data }) => {
   );
 };
 
-export default SyncedChartViewer;
+export default GPTAnalysisContainer;
